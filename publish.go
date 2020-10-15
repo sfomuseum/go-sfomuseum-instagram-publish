@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	_ "fmt"
 	sfom_reader "github.com/sfomuseum/go-sfomuseum-reader"
 	sfom_writer "github.com/sfomuseum/go-sfomuseum-writer"
@@ -13,6 +14,8 @@ import (
 	"github.com/whosonfirst/go-whosonfirst-export/exporter"
 	"github.com/whosonfirst/go-writer"
 	"log"
+	"path/filepath"
+	"strings"
 	"sync"
 	"time"
 )
@@ -33,22 +36,27 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 		// pass
 	}
 
-	id_rsp := gjson.GetBytes(body, "id")
+	path_rsp := gjson.GetBytes(body, "path")
 
-	if !id_rsp.Exists() {
-		return errors.New("Missing 'id' property")
+	if !path_rsp.Exists() {
+		return errors.New("Missing 'path' property")
 	}
 
-	text_rsp := gjson.GetBytes(body, "full_text")
+	caption_rsp := gjson.GetBytes(body, "caption")
 
-	if !text_rsp.Exists() {
-		return errors.New("Missing 'full_text' property")
+	if !caption_rsp.Exists() {
+		return errors.New("Missing 'caption' property")
 	}
 
-	tweet_id := id_rsp.Int()
-	full_text := text_rsp.String()
+	path := path_rsp.String()
+	// caption := caption_rsp.String()
 
-	pointer, ok := opts.Lookup.Load(tweet_id)
+	fname := filepath.Base(path)
+	ext := filepath.Ext(path)
+
+	media_id := strings.Replace(fname, ext, "", 1)
+
+	pointer, ok := opts.Lookup.Load(media_id)
 
 	var wof_record []byte
 
@@ -74,32 +82,41 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 
 		wof_record = new_record
 
-		created_rsp := gjson.GetBytes(tweet_body, "created")
+		taken_rsp := gjson.GetBytes(body, "taken_at")
 
-		if !created_rsp.Exists() {
+		if !taken_rsp.Exists() {
 			return errors.New("Missing created timestamp")
 		}
 
-		created_ts := created_rsp.Int()
-		created_t := time.Unix(created_ts, 0)
+		taken_at := taken_rsp.String()
 
-		edtf_t := created_t.Format(time.RFC3339)
-
-		wof_record, err = sjson.SetBytes(wof_record, "properties.edtf:inception", edtf_t)
+		taken_t, err := time.Parse(time.RFC3339, taken_at)
 
 		if err != nil {
 			return err
 		}
 
-		wof_record, err = sjson.SetBytes(wof_record, "properties.edtf:cessation", edtf_t)
+		wof_record, err = sjson.SetBytes(wof_record, "properties.wof:created", taken_t.Unix())
+
+		if err != nil {
+			return err
+		}
+
+		wof_record, err = sjson.SetBytes(wof_record, "properties.edtf:inception", taken_at)
+
+		if err != nil {
+			return err
+		}
+
+		wof_record, err = sjson.SetBytes(wof_record, "properties.edtf:cessation", taken_at)
 
 		if err != nil {
 			return err
 		}
 	}
 
-	wof_name := full_text // fmt.Sprintf("Instagram message #%d", tweet_id)
-	wof_record, err = sjson.SetBytes(wof_record, "properties.wof:name", wof_name)
+	wof_name := fmt.Sprintf("Instagram message #%d", media_id)
+	wof_record, err := sjson.SetBytes(wof_record, "properties.wof:name", wof_name)
 
 	if err != nil {
 		return err
@@ -115,15 +132,15 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 		}
 	*/
 
-	var tw interface{}
+	var post interface{}
 
-	err = json.Unmarshal(tweet_body, &tw)
+	err = json.Unmarshal(body, &post)
 
 	if err != nil {
 		return err
 	}
 
-	wof_record, err = sjson.SetBytes(wof_record, "properties.twitter:tweet", tw)
+	wof_record, err = sjson.SetBytes(wof_record, "properties.instagram:post", post)
 
 	if err != nil {
 		return err

@@ -18,7 +18,6 @@ import (
 func main() {
 
 	media_uri := flag.String("media-uri", "", "A valid gocloud.dev/blob URI to your `media.json` file.")
-	trim_prefix := flag.Bool("trim-prefix", true, "Trim default tweet.js JavaScript prefix.")
 
 	indexer_uri := flag.String("indexer-uri", "git://", "A valid whosonfirst/go-whosonfirst-index URI")
 	indexer_path := flag.String("indexer-path", "git@github.com:sfomuseum-data/sfomuseum-data-socialmedia-instagram.git", "...")
@@ -33,17 +32,13 @@ func main() {
 
 	defer cancel()
 
-	open_opts := &twitter.OpenTweetsOptions{
-		TrimPrefix: *trim_prefix,
-	}
-
-	tweets_fh, err := instagram.OpenMedia(ctx, *media_uri, open_opts)
+	media_fh, err := instagram.OpenMedia(ctx, *media_uri)
 
 	if err != nil {
-		log.Fatalf("Failed to open %s, %v", *tweets_uri, err)
+		log.Fatalf("Failed to open %s, %v", *media_uri, err)
 	}
 
-	defer tweets_fh.Close()
+	defer media_fh.Close()
 
 	rdr, err := reader.NewReader(ctx, *reader_uri)
 
@@ -97,10 +92,10 @@ func main() {
 			throttle <- true
 		}()
 
-		return publish.PublishTweet(ctx, publish_opts, body)
+		return publish.PublishMedia(ctx, publish_opts, body)
 	}
 
-	err = walk.WalkTweetsWithCallback(ctx, tweets_fh, cb)
+	err = walk.WalkMediaWithCallback(ctx, media_fh, cb)
 
 	if err != nil {
 		log.Fatal(err)
