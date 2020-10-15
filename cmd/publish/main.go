@@ -17,8 +17,6 @@ import (
 
 func main() {
 
-	media_uri := flag.String("media-uri", "", "A valid gocloud.dev/blob URI to your `media.json` file.")
-
 	indexer_uri := flag.String("indexer-uri", "git://", "A valid whosonfirst/go-whosonfirst-index URI")
 	indexer_path := flag.String("indexer-path", "git@github.com:sfomuseum-data/sfomuseum-data-socialmedia-instagram.git", "...")
 
@@ -31,14 +29,6 @@ func main() {
 	ctx, cancel := context.WithCancel(ctx)
 
 	defer cancel()
-
-	media_fh, err := instagram.OpenMedia(ctx, *media_uri)
-
-	if err != nil {
-		log.Fatalf("Failed to open %s, %v", *media_uri, err)
-	}
-
-	defer media_fh.Close()
 
 	rdr, err := reader.NewReader(ctx, *reader_uri)
 
@@ -85,20 +75,33 @@ func main() {
 	}
 
 	cb := func(ctx context.Context, body []byte) error {
-
+		
 		<-throttle
-
+		
 		defer func() {
 			throttle <- true
 		}()
-
+		
 		return publish.PublishMedia(ctx, publish_opts, body)
 	}
+	
+	args := flag.Args()
+	
+	for _, media_uri := range args {
 
-	err = walk.WalkMediaWithCallback(ctx, media_fh, cb)
-
-	if err != nil {
-		log.Fatal(err)
+		media_fh, err := instagram.OpenMedia(ctx, media_uri)
+		
+		if err != nil {
+			log.Fatalf("Failed to open %s, %v", media_uri, err)
+		}
+		
+		defer media_fh.Close()
+		
+		err = walk.WalkMediaWithCallback(ctx, media_fh, cb)
+		
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
-
+	
 }

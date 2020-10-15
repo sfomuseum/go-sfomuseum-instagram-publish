@@ -57,7 +57,7 @@ github.com/sfomuseum/go-sfomuseum-export
 github.com/sfomuseum/go-sfomuseum-export/properties
 # github.com/sfomuseum/go-sfomuseum-geojson v0.1.1
 github.com/sfomuseum/go-sfomuseum-geojson/feature
-# github.com/sfomuseum/go-sfomuseum-instagram v0.0.0-20201015183657-154cec3d77de
+# github.com/sfomuseum/go-sfomuseum-instagram v0.0.0-20201015220341-399a3a3b526c
 github.com/sfomuseum/go-sfomuseum-instagram
 github.com/sfomuseum/go-sfomuseum-instagram/document
 github.com/sfomuseum/go-sfomuseum-instagram/walk

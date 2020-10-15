@@ -41,7 +41,7 @@ func BuildLookup(ctx context.Context, indexer_uri string, indexer_path string) (
 			return fmt.Errorf("Missing Twitter ID for record %d", wof_id)
 		}
 
-		media_id := media_rsp.Int()
+		media_id := media_rsp.String()
 
 		lookup.Store(media_id, wof_id)
 
