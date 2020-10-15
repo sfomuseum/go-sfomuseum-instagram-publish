@@ -4,7 +4,7 @@ go 1.12
 
 require (
 	github.com/sfomuseum/go-sfomuseum-export v0.2.0
-	github.com/sfomuseum/go-sfomuseum-instagram v0.0.0-20201015000206-19748e9a1a3e
+	github.com/sfomuseum/go-sfomuseum-instagram v0.0.0-20201015183657-154cec3d77de
 	github.com/sfomuseum/go-sfomuseum-reader v0.0.0-20201006223747-80bcf386c7f8
 	github.com/sfomuseum/go-sfomuseum-writer v0.0.0-20201006223711-bde90c768e44
 	github.com/tidwall/gjson v1.6.1
