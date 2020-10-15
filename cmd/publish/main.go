@@ -1,5 +1,14 @@
 package main
 
+/*
+
+this is not ideal so we might need to revisit this code to search a folder recursively
+for `media.json` files - we'll see... (20201015/thisisaaronland)
+
+$> go run -mod vendor cmd/publish/main.go -reader-uri fs:///usr/local/data/sfomuseum-data-socialmedia-instagram/data -writer-uri fs:///usr/local/data/sfomuseum-data-socialmedia-instagram/data file:///Users/asc/Desktop/instagram/sfomuseum_20201008_part_2/media.json file:///Users/asc/Desktop/instagram/sfomuseum_20201008_part_3/media.json file:///Users/asc/Desktop/instagram/sfomuseum_20201008_part_4/media.json file:///Users/asc/Desktop/instagram/sfomuseum_20201008_part_5/media.json
+
+*/
+
 import (
 	"context"
 	"flag"
@@ -11,7 +20,6 @@ import (
 	_ "github.com/whosonfirst/go-whosonfirst-export/options"
 	"github.com/whosonfirst/go-writer"
 	_ "gocloud.dev/blob/fileblob"
-
 	"log"
 )
 
@@ -75,33 +83,35 @@ func main() {
 	}
 
 	cb := func(ctx context.Context, body []byte) error {
-		
+
 		<-throttle
-		
+
 		defer func() {
 			throttle <- true
 		}()
-		
+
 		return publish.PublishMedia(ctx, publish_opts, body)
 	}
-	
+
 	args := flag.Args()
-	
+
 	for _, media_uri := range args {
 
 		media_fh, err := instagram.OpenMedia(ctx, media_uri)
-		
+
 		if err != nil {
 			log.Fatalf("Failed to open %s, %v", media_uri, err)
 		}
-		
+
 		defer media_fh.Close()
-		
+
 		err = walk.WalkMediaWithCallback(ctx, media_fh, cb)
-		
+
 		if err != nil {
 			log.Fatal(err)
 		}
+
+		log.Println(media_uri)
 	}
-	
+
 }
