@@ -193,7 +193,7 @@ func newWOFRecord(ctx context.Context) ([]byte, error) {
 	feature := map[string]interface{}{
 		"type": "Feature",
 		"properties": map[string]interface{}{
-			"sfomuseum:placetype": "instragram",
+			"sfomuseum:placetype": "instagram",
 			"src:geom":            "sfomuseum",
 			"wof:country":         "US",
 			"wof:parent_id":       parent_id,
