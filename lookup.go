@@ -35,15 +35,15 @@ func BuildLookup(ctx context.Context, indexer_uri string, indexer_path string) (
 
 		wof_id := wof_rsp.Int()
 
-		tweet_rsp := gjson.GetBytes(body, "properties.twitter:tweet.id")
+		media_rsp := gjson.GetBytes(body, "properties.instagram:post.media_id")
 
-		if !tweet_rsp.Exists() {
+		if !media_rsp.Exists() {
 			return fmt.Errorf("Missing Twitter ID for record %d", wof_id)
 		}
 
-		tweet_id := tweet_rsp.Int()
+		media_id := media_rsp.Int()
 
-		lookup.Store(tweet_id, wof_id)
+		lookup.Store(media_id, wof_id)
 
 		atomic.AddInt32(&count, 1)
 		return nil
