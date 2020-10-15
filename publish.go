@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	_ "fmt"
+	"github.com/sfomuseum/go-sfomuseum-instagram/document"
 	sfom_reader "github.com/sfomuseum/go-sfomuseum-reader"
 	sfom_writer "github.com/sfomuseum/go-sfomuseum-writer"
 	"github.com/tidwall/gjson"
@@ -14,8 +15,6 @@ import (
 	"github.com/whosonfirst/go-whosonfirst-export/exporter"
 	"github.com/whosonfirst/go-writer"
 	"log"
-	"path/filepath"
-	"strings"
 	"sync"
 	"time"
 )
@@ -36,25 +35,31 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 		// pass
 	}
 
-	path_rsp := gjson.GetBytes(body, "path")
+	body, err := document.AppendTakenAtTimestamp(ctx, body)
 
-	if !path_rsp.Exists() {
-		return errors.New("Missing 'path' property")
+	if err != nil {
+		return err
 	}
 
-	caption_rsp := gjson.GetBytes(body, "caption")
+	body, err = document.AppendMediaIDFromPath(ctx, body)
 
-	if !caption_rsp.Exists() {
-		return errors.New("Missing 'caption' property")
+	if err != nil {
+		return err
 	}
 
-	path := path_rsp.String()
-	// caption := caption_rsp.String()
+	body, err = document.ExpandCaption(ctx, body)
 
-	fname := filepath.Base(path)
-	ext := filepath.Ext(path)
+	if err != nil {
+		return err
+	}
 
-	media_id := strings.Replace(fname, ext, "", 1)
+	id_rsp := gjson.GetBytes(body, "media_id")
+
+	if !id_rsp.Exists() {
+		return errors.New("Missing 'media_id' property")
+	}
+
+	media_id := id_rsp.String()
 
 	pointer, ok := opts.Lookup.Load(media_id)
 
@@ -82,19 +87,21 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 
 		wof_record = new_record
 
-		taken_rsp := gjson.GetBytes(body, "taken_at")
+		taken_rsp := gjson.GetBytes(body, "taken")
 
 		if !taken_rsp.Exists() {
 			return errors.New("Missing created timestamp")
 		}
 
-		taken_at := taken_rsp.String()
+		taken := taken_rsp.Int()
 
-		taken_t, err := time.Parse(time.RFC3339, taken_at)
+		taken_t := time.Unix(taken, 0)
 
 		if err != nil {
 			return err
 		}
+
+		taken_str := taken_t.Format(time.RFC3339)
 
 		wof_record, err = sjson.SetBytes(wof_record, "properties.wof:created", taken_t.Unix())
 
@@ -102,13 +109,13 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 			return err
 		}
 
-		wof_record, err = sjson.SetBytes(wof_record, "properties.edtf:inception", taken_at)
+		wof_record, err = sjson.SetBytes(wof_record, "properties.edtf:inception", taken_str)
 
 		if err != nil {
 			return err
 		}
 
-		wof_record, err = sjson.SetBytes(wof_record, "properties.edtf:cessation", taken_at)
+		wof_record, err = sjson.SetBytes(wof_record, "properties.edtf:cessation", taken_str)
 
 		if err != nil {
 			return err
@@ -116,7 +123,7 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 	}
 
 	wof_name := fmt.Sprintf("Instagram message #%d", media_id)
-	wof_record, err := sjson.SetBytes(wof_record, "properties.wof:name", wof_name)
+	wof_record, err = sjson.SetBytes(wof_record, "properties.wof:name", wof_name)
 
 	if err != nil {
 		return err
