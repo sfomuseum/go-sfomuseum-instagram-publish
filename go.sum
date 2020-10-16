@@ -240,6 +240,8 @@ github.com/sfomuseum/go-sfomuseum-instagram v0.0.0-20201015183657-154cec3d77de h
 github.com/sfomuseum/go-sfomuseum-instagram v0.0.0-20201015183657-154cec3d77de/go.mod h1:nI4SpXzZchBQ90f2ilkgj9XsFNYXKvdXW0pt54oxhxg=
 github.com/sfomuseum/go-sfomuseum-instagram v0.0.0-20201015220341-399a3a3b526c h1:gjv4K+VfF2XYujyuZCrxcvXNHJ7l4cJrQXG6rFO7z4E=
 github.com/sfomuseum/go-sfomuseum-instagram v0.0.0-20201015220341-399a3a3b526c/go.mod h1:nI4SpXzZchBQ90f2ilkgj9XsFNYXKvdXW0pt54oxhxg=
+github.com/sfomuseum/go-sfomuseum-instagram v0.0.3 h1:uoNtu8l0HCDwy27Quo5ZtxrbrbUcXPRCrnKhTGI5jQk=
+github.com/sfomuseum/go-sfomuseum-instagram v0.0.3/go.mod h1:h4ydcXfa7mZhhBKGOAvLZp+iFKIPwbrAZyj9Hov5W7U=
 github.com/sfomuseum/go-sfomuseum-reader v0.0.0-20201006223747-80bcf386c7f8 h1:Bc7uNSDfVUBDti4BQ92HZnyz8cu9fdjP5iMEHyxfcXU=
 github.com/sfomuseum/go-sfomuseum-reader v0.0.0-20201006223747-80bcf386c7f8/go.mod h1:1KEUeVCpNwUkE5JlweZMzX/AX5WvwptjKn7w1kiz0kQ=
 github.com/sfomuseum/go-sfomuseum-writer v0.0.0-20201006223711-bde90c768e44 h1:NBJp8Km9A7cScjaIQM+hvzPpV/g+QQf9rU4aCcYE+18=
@@ -569,6 +571,8 @@ gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8
 gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/errgo.v2 v2.1.0/go.mod h1:hNsd1EY+bozCKY1Ytp96fpM3vjJbqLJn88ws8XvfDNI=
 gopkg.in/ini.v1 v1.42.0/go.mod h1:pNLf8WUiyNEtQjuu5G5vTm06TEv9tsIgeAvK8hOrP4k=
+gopkg.in/neurosnap/sentences.v1 v1.0.6 h1:v7ElyP020iEZQONyLld3fHILHWOPs+ntzuQTNPkul8E=
+gopkg.in/neurosnap/sentences.v1 v1.0.6/go.mod h1:YlK+SN+fLQZj+kY3r8DkGDhDr91+S3JmTb5LSxFRQo0=
 gopkg.in/src-d/go-billy.v4 v4.3.2 h1:0SQA1pRztfTFx2miS8sA97XvooFeNOmvUenF4o0EcVg=
 gopkg.in/src-d/go-billy.v4 v4.3.2/go.mod h1:nDjArDMp+XMs1aFAESLRjfGSgfvoYN0hDfzEk0GjC98=
 gopkg.in/src-d/go-git-fixtures.v3 v3.5.0/go.mod h1:dLBcvytrw/TYZsNTWCnkNF2DSIlzWYqTe3rJR56Ac7g=

@@ -86,58 +86,54 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 		}
 
 		wof_record = new_record
-
-		taken_rsp := gjson.GetBytes(body, "taken")
-
-		if !taken_rsp.Exists() {
-			return errors.New("Missing created timestamp")
-		}
-
-		taken := taken_rsp.Int()
-
-		taken_t := time.Unix(taken, 0)
-
-		if err != nil {
-			return err
-		}
-
-		taken_str := taken_t.Format(time.RFC3339)
-
-		wof_record, err = sjson.SetBytes(wof_record, "properties.wof:created", taken_t.Unix())
-
-		if err != nil {
-			return err
-		}
-
-		wof_record, err = sjson.SetBytes(wof_record, "properties.edtf:inception", taken_str)
-
-		if err != nil {
-			return err
-		}
-
-		wof_record, err = sjson.SetBytes(wof_record, "properties.edtf:cessation", taken_str)
-
-		if err != nil {
-			return err
-		}
 	}
 
-	wof_name := fmt.Sprintf("Instagram message #%d", media_id)
-	wof_record, err = sjson.SetBytes(wof_record, "properties.wof:name", wof_name)
+	taken_rsp := gjson.GetBytes(body, "taken")
+
+	if !taken_rsp.Exists() {
+		return errors.New("Missing created timestamp")
+	}
+
+	taken := taken_rsp.Int()
+
+	taken_t := time.Unix(taken, 0)
 
 	if err != nil {
 		return err
 	}
 
-	// why does this keep getting set incorrectly...
+	taken_str := taken_t.Format(time.RFC3339)
 
-	/*
-		wof_record, err = sjson.SetBytes(wof_record, "properties.wof:concordances.twitter:id", tweet_id)
+	wof_record, err = sjson.SetBytes(wof_record, "properties.wof:created", taken_t.Unix())
 
-		if err != nil {
-			return err
-		}
-	*/
+	if err != nil {
+		return err
+	}
+
+	wof_record, err = sjson.SetBytes(wof_record, "properties.edtf:inception", taken_str)
+
+	if err != nil {
+		return err
+	}
+
+	wof_record, err = sjson.SetBytes(wof_record, "properties.edtf:cessation", taken_str)
+
+	if err != nil {
+		return err
+	}
+
+	excerpt_rsp := gjson.GetBytes(body, "caption.excerpt")
+
+	if !excerpt_rsp.Exists() {
+		return errors.New("Missing caption.excerpt")
+	}
+
+	wof_name := fmt.Sprintf("%s..", excerpt_rsp.String())
+	wof_record, err = sjson.SetBytes(wof_record, "properties.wof:name", wof_name)
+
+	if err != nil {
+		return err
+	}
 
 	var post interface{}
 

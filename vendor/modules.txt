@@ -57,7 +57,7 @@ github.com/sfomuseum/go-sfomuseum-export
 github.com/sfomuseum/go-sfomuseum-export/properties
 # github.com/sfomuseum/go-sfomuseum-geojson v0.1.1
 github.com/sfomuseum/go-sfomuseum-geojson/feature
-# github.com/sfomuseum/go-sfomuseum-instagram v0.0.0-20201015220341-399a3a3b526c
+# github.com/sfomuseum/go-sfomuseum-instagram v0.0.3
 github.com/sfomuseum/go-sfomuseum-instagram
 github.com/sfomuseum/go-sfomuseum-instagram/document
 github.com/sfomuseum/go-sfomuseum-instagram/walk
@@ -269,6 +269,10 @@ google.golang.org/protobuf/runtime/protoimpl
 google.golang.org/protobuf/types/known/anypb
 google.golang.org/protobuf/types/known/durationpb
 google.golang.org/protobuf/types/known/timestamppb
+# gopkg.in/neurosnap/sentences.v1 v1.0.6
+gopkg.in/neurosnap/sentences.v1
+gopkg.in/neurosnap/sentences.v1/data
+gopkg.in/neurosnap/sentences.v1/english
 # gopkg.in/src-d/go-billy.v4 v4.3.2
 gopkg.in/src-d/go-billy.v4
 gopkg.in/src-d/go-billy.v4/helper/chroot
