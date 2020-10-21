@@ -75,6 +75,8 @@ github.com/aaronland/go-artisanal-integers-proxy v0.2.0/go.mod h1:7Pkt553bRIgRMz
 github.com/aaronland/go-brooklynintegers-api v1.0.2/go.mod h1:JlR7i6vciy3W0aMnid7cN/Ls9Pz/vaq1lNj9sCENQf0=
 github.com/aaronland/go-brooklynintegers-api v1.1.0 h1:eyoSZjn3Qiy79H+1rG/HtkEShNBZkPUWs4YKpFWkuD8=
 github.com/aaronland/go-brooklynintegers-api v1.1.0/go.mod h1:agceH8JW8PcdHGCyKEDmOntccB3m7xUKrUejHpxAs6U=
+github.com/aaronland/go-json-query v0.0.2 h1:cKw/DnxtGaPsClb78ONgmXPOJkqHhaBMU2RTBbPoXos=
+github.com/aaronland/go-json-query v0.0.2/go.mod h1:dGc7y824R93ugQMTldL7PFD/SPVGPwKdqrUJFLE/ILU=
 github.com/aaronland/go-londonintegers-api v0.1.0/go.mod h1:E0VIcwks+So4FL1FYAQzrO5/OVOUsFPsqW85UrZArSE=
 github.com/aaronland/go-missionintegers-api v0.1.0/go.mod h1:LZEM5+MkPX5RehLxTEv+3Y3cqMSYEk86qBa+aVecnKw=
 github.com/aaronland/go-missionintegers-api v0.1.1/go.mod h1:CvByrizvklOxK6QD+Z4RNqACxHqqVjiB/GdWQfrB4Mc=
@@ -242,6 +244,8 @@ github.com/sfomuseum/go-sfomuseum-instagram v0.0.0-20201015220341-399a3a3b526c h
 github.com/sfomuseum/go-sfomuseum-instagram v0.0.0-20201015220341-399a3a3b526c/go.mod h1:nI4SpXzZchBQ90f2ilkgj9XsFNYXKvdXW0pt54oxhxg=
 github.com/sfomuseum/go-sfomuseum-instagram v0.0.3 h1:uoNtu8l0HCDwy27Quo5ZtxrbrbUcXPRCrnKhTGI5jQk=
 github.com/sfomuseum/go-sfomuseum-instagram v0.0.3/go.mod h1:h4ydcXfa7mZhhBKGOAvLZp+iFKIPwbrAZyj9Hov5W7U=
+github.com/sfomuseum/go-sfomuseum-instagram v0.0.4 h1:v7XP7J69eIyCGxfh1j8YX0XXpoiPVpf/J5TkOYiLiBA=
+github.com/sfomuseum/go-sfomuseum-instagram v0.0.4/go.mod h1:vL4bcQYrwT09nj7jy/5wO/S3o2wF3sGWOhWkvcBZaRU=
 github.com/sfomuseum/go-sfomuseum-reader v0.0.0-20201006223747-80bcf386c7f8 h1:Bc7uNSDfVUBDti4BQ92HZnyz8cu9fdjP5iMEHyxfcXU=
 github.com/sfomuseum/go-sfomuseum-reader v0.0.0-20201006223747-80bcf386c7f8/go.mod h1:1KEUeVCpNwUkE5JlweZMzX/AX5WvwptjKn7w1kiz0kQ=
 github.com/sfomuseum/go-sfomuseum-writer v0.0.0-20201006223711-bde90c768e44 h1:NBJp8Km9A7cScjaIQM+hvzPpV/g+QQf9rU4aCcYE+18=

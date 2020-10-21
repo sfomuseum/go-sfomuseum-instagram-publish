@@ -84,6 +84,10 @@ func main() {
 		return publish.PublishMedia(ctx, publish_opts, body)
 	}
 
+	walk_opts := &walk.WalkWithCallbackOptions{
+		Callback: cb,
+	}
+	
 	args := flag.Args()
 
 	for _, media_uri := range args {
@@ -96,7 +100,7 @@ func main() {
 
 		defer media_fh.Close()
 
-		err = walk.WalkMediaWithCallback(ctx, media_fh, cb)
+		err = walk.WalkMediaWithCallback(ctx, walk_opts, media_fh)
 
 		if err != nil {
 			log.Fatal(err)
