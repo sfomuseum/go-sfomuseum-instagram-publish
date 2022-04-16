@@ -16,11 +16,11 @@ import (
 
 func main() {
 
-	indexer_uri := flag.String("indexer-uri", "git://", "A valid whosonfirst/go-whosonfirst-index URI")
-	indexer_path := flag.String("indexer-path", "git@github.com:sfomuseum-data/sfomuseum-data-socialmedia-instagram.git", "...")
+	iterator_uri := flag.String("iterator-uri", "repo://", "A valid whosonfirst/go-whosonfirst-iterate/v2 URI")
+	iterator_source := flag.String("iterator-source", "/usr/local/data/sfomuseum-data-socialmedia-instagram/data", "...")
 
-	reader_uri := flag.String("reader-uri", "", "A valid whosonfirst/go-reader URI")
-	writer_uri := flag.String("writer-uri", "", "A valid whosonfirst/go-writer URI")
+	reader_uri := flag.String("reader-uri", "fs:///usr/local/data/sfomuseum-data-socialmedia-instagram/data", "A valid whosonfirst/go-reader URI")
+	writer_uri := flag.String("writer-uri", "fs:///usr/local/data/sfomuseum-data-socialmedia-instagram/data", "A valid whosonfirst/go-writer URI")
 
 	flag.Parse()
 
@@ -32,13 +32,13 @@ func main() {
 	rdr, err := reader.NewReader(ctx, *reader_uri)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to create reader, %v", err)
 	}
 
 	wrtr, err := writer.NewWriter(ctx, *writer_uri)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to create writer, %v", err)
 	}
 
 	exprtr, err := export.NewExporter(ctx, "sfomuseum://")
@@ -47,7 +47,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	lookup, err := publish.BuildLookup(ctx, *indexer_uri, *indexer_path)
+	lookup, err := publish.BuildLookup(ctx, *iterator_uri, *iterator_source)
 
 	if err != nil {
 		log.Fatalf("Failed to build lookup, %v", err)
@@ -97,7 +97,7 @@ func main() {
 		err = walk.WalkMediaWithCallback(ctx, walk_opts, media_fh)
 
 		if err != nil {
-			log.Fatal(err)
+			log.Fatalf("Failed to walk media for %s, %v", media_uri, err)
 		}
 
 		log.Println(media_uri)
