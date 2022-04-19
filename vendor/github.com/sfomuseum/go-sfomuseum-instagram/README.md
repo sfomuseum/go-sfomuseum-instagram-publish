@@ -2,9 +2,11 @@
 
 Go package for working with Instagram archives.
 
-## Important
+## Documentation
 
-Work in progress. Documentation to follow.
+Documentation is incomplete at this time.
+
+[![Go Reference](https://pkg.go.dev/badge/github.com/sfomuseum/go-sfomuseum-instagram.svg)](https://pkg.go.dev/github.com/sfomuseum/go-sfomuseum-instagram)
 
 ## Tools
 
@@ -13,6 +15,7 @@ To build binary versions of these tools run the `cli` Makefile target. For examp
 ```
 $> make cli
 go build -mod vendor -o bin/emit cmd/emit/main.go
+go build -mod vendor -o bin/derive-media-json cmd/derive-media-json/main.go
 ```
 
 ### emit
@@ -173,6 +176,52 @@ The default query mode is to ensure that all queries match but you can also spec
 ... and so on
 ]
 ```
+
+#### derive-media-json
+
+`derive-media-json` is a command line tool to derive an abbreviated "media.json" file from a "contents/posts-(N).html" file as published by the Instagram export tool, circa April, 2022.
+
+Previous Instagram export data bundles (circa October, 2020) used to provide one or more "media-(N).json" files that contained machine-readable properties for working with Instagram exports. This tool attempts to reconstruct that data derived from HTML markup and outputs the results as JSON to STDOUT.
+
+For example:
+
+```
+$> bin/derive-media-json /usr/local/instagram-export/contents/posts_1.html
+
+[
+  {
+   "media_id": "25fb5d2705094dc3dcd7fa433adbb4cd4c9653f1",
+   "path": "media/posts/201502/1209467_621332467997055_325446168_n_17841739630062499.jpg",
+   "taken_at": "2015-02-26T15:07:00Z",
+   "caption": {
+    "body": "\"Making art is like escaping to find peace of mind.\" -Lee Kang Hyo (b. 1961). A final image from Dual Natures in Ceramics before the exhibition is deinstalled tomorrow. #DualNatures #Korean #ceramics #pottery",
+    "hashtags": [
+     "DualNatures",
+     "Korean",
+     "ceramics",
+     "pottery"
+    ]
+   }
+  },
+  {
+   "media_id": "30be7ab6763be9c0f2eae7d7ee57faa43a780116",
+   "path": "media/posts/201502/10986292_690732684371255_1179212910_n_17841739627062499.jpg",
+   "taken_at": "2015-02-13T15:15:00Z",
+   "caption": {
+    "body": "Gorgeous and golden details emphasize the exotic elements on this 1860s-70s table stand. #EgyptianRevival #furniture #design",
+    "hashtags": [
+     "EgyptianRevival",
+     "furniture",
+     "design"
+    ]
+   }
+  }
+   ... and so on
+```
+
+##### Caveats
+
+It is expected that this tool is brittle precisely because it is parsing non-structured data observed at a moment in time. This tool has been demonstrated to work with Instagram exports as published in April, 2022 but there are no guarantees that this tool will with future (or past) Instagram exports. This tool should not need to exist but until equivalent machine-readable data is published by Instagram it will have to do.
 
 ## See also
 
