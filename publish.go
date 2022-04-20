@@ -41,13 +41,6 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 		return err
 	}
 
-	// Fix me
-	body, err = media.AppendMediaIDFromPath(ctx, body)
-
-	if err != nil {
-		return err
-	}
-
 	body, err = media.ExpandCaption(ctx, body)
 
 	if err != nil {
@@ -58,6 +51,8 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 	// However between Oct 2020 and April 2022 those paths changed from
 	// being something like {HASH}.jpg to {SOME}-{THING}-{SOME}-{THING}.jpg
 	// The former allows us to use {HASH} in the mf.sfom URL.
+
+	// QUESTION: Do we really need media ID?
 
 	caption_rsp := gjson.GetBytes(body, "caption.body")
 	caption := caption_rsp.String()

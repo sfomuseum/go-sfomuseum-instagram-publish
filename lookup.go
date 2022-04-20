@@ -40,7 +40,6 @@ func BuildLookup(ctx context.Context, indexer_uri string, indexer_path string) (
 		caption := caption_rsp.String()
 
 		lookup_key := media.DeriveMediaIdFromString(caption)
-
 		lookup.Store(lookup_key, wof_id)
 
 		atomic.AddInt32(&count, 1)

@@ -1,3 +1,11 @@
+// publish is a command-line tool to merge Instagram posts defined in one or more "media.json" files
+// with the sfomuseum-data-socialmedia-instagram repository. For example:
+//
+//	$> ./bin/publish file:///usr/local/data/media.json
+//
+// Important: As of April, 2022 Instagram no longer publishes "media.json" files with the export bundles.
+// Use the sfomuseum/go-sfomuseum-instagram/cmd/derive-media-json tool to create a media.json file from
+// the available data.
 package main
 
 import (
