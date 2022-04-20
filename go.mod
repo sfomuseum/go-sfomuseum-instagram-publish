@@ -5,7 +5,7 @@ go 1.16
 require (
 	github.com/corona10/goimagehash v1.0.3
 	github.com/sfomuseum/go-sfomuseum-export/v2 v2.3.6
-	github.com/sfomuseum/go-sfomuseum-instagram v0.1.2
+	github.com/sfomuseum/go-sfomuseum-instagram v0.2.0
 	github.com/sfomuseum/go-sfomuseum-reader v0.0.2
 	github.com/sfomuseum/go-sfomuseum-writer v0.2.7
 	github.com/tidwall/gjson v1.14.0

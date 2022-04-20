@@ -20,6 +20,8 @@ import (
 	"gocloud.dev/blob"
 	"github.com/corona10/goimagehash"
 	"path/filepath"
+	"sync"
+	"time"
 )
 
 func main() {
@@ -35,6 +37,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to open media bucket, %v", err)
 	}
+
+	lookup := new(sync.Map)
 	
 	cb := func(ctx context.Context, body []byte) error {
 
@@ -46,6 +50,18 @@ func main() {
 
 		rel_path := path_rsp.String()
 
+		taken_rsp := gjson.GetBytes(body, "taken_at")
+
+		taken_at := taken_rsp.String()
+
+		t, err := time.Parse(time.RFC3339, taken_at)
+
+		if err != nil {
+			return fmt.Errorf("Failed to parse time (%s) for %s, %w", taken_at, rel_path, err)
+		}
+
+		ts := t.Unix()
+		
 		img_fh, err := media_bucket.NewReader(ctx, rel_path, nil)
 
 		if err != nil {
@@ -61,6 +77,14 @@ func main() {
 		}
 
 		img_hash := fmt.Sprintf("%x", sha256.Sum256(img_body))
+		hash_key := fmt.Sprintf("%d-%s", ts, img_hash)
+		
+		v, exists := lookup.LoadOrStore(hash_key, rel_path)
+
+		if exists {
+			log.Printf("Existing image hash (%s) for %s: %s\n", img_hash, rel_path, v)
+		}
+		
 		p_hash := ""
 		
 		if filepath.Ext(rel_path) != ".mp4" {
@@ -72,16 +96,24 @@ func main() {
 				return fmt.Errorf("Failed to decode %s, %w", rel_path, err)
 			}
 
-			avg_hash, err := goimagehash.AverageHash(im)
+			avg_hash, err := goimagehash.PerceptionHash(im)
 
 			if err != nil {
 				return fmt.Errorf("Failed to derive average hash for %s, %w", rel_path, err)
 			}
 
 			p_hash = avg_hash.ToString()
+
+			p_hash_key := fmt.Sprintf("%d-%s", ts, p_hash)			
+			v, exists := lookup.LoadOrStore(p_hash_key, rel_path)
+			
+			if exists {
+				log.Printf("Existing perceptual hash (%s) for %s: %s\n", p_hash, rel_path, v)
+			}
+			
 		}
 		
-		log.Println(rel_path, img_hash, p_hash)
+		// log.Println(rel_path, img_hash, p_hash)
 		return nil
 	}
 	
