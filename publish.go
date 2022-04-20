@@ -41,6 +41,7 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 		return err
 	}
 
+	// Fix me
 	body, err = document.AppendMediaIDFromPath(ctx, body)
 
 	if err != nil {
@@ -53,15 +54,25 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 		return err
 	}
 
-	id_rsp := gjson.GetBytes(body, "media_id")
+	/*
+		id_rsp := gjson.GetBytes(body, "media_id")
 
-	if !id_rsp.Exists() {
-		return errors.New("Missing 'media_id' property")
-	}
+		if !id_rsp.Exists() {
+			return errors.New("Missing 'media_id' property")
+		}
 
-	media_id := id_rsp.String()
+		media_id := id_rsp.String()
+	*/
 
-	pointer, ok := opts.Lookup.Load(media_id)
+	caption_rsp := gjson.GetBytes(body, "caption.body")
+	caption := caption_rsp.String()
+
+	lookup_key := HashLookupString(caption)
+
+	pointer, ok := opts.Lookup.Load(lookup_key)
+
+	log.Println(lookup_key, ok, pointer)
+	return nil
 
 	var wof_record []byte
 

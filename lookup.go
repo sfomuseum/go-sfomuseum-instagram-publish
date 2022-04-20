@@ -2,6 +2,7 @@ package publish
 
 import (
 	"context"
+	"crypto/sha1"
 	"fmt"
 	"github.com/tidwall/gjson"
 	_ "github.com/whosonfirst/go-whosonfirst-iterate-git/v2"
@@ -33,15 +34,22 @@ func BuildLookup(ctx context.Context, indexer_uri string, indexer_path string) (
 
 		wof_id := wof_rsp.Int()
 
-		media_rsp := gjson.GetBytes(body, "properties.instagram:post.media_id")
+		/*
+			media_rsp := gjson.GetBytes(body, "properties.instagram:post.media_id")
 
-		if !media_rsp.Exists() {
-			return fmt.Errorf("Missing Twitter ID for record %d", wof_id)
-		}
+			if !media_rsp.Exists() {
+				return fmt.Errorf("Missing Twitter ID for record %d", wof_id)
+			}
 
-		media_id := media_rsp.String()
+			media_id := media_rsp.String()
+		*/
 
-		lookup.Store(media_id, wof_id)
+		caption_rsp := gjson.GetBytes(body, "properties.instagram:post.caption.body")
+		caption := caption_rsp.String()
+
+		lookup_key := HashLookupString(caption)
+
+		lookup.Store(lookup_key, wof_id)
 
 		atomic.AddInt32(&count, 1)
 		return nil
@@ -60,4 +68,9 @@ func BuildLookup(ctx context.Context, indexer_uri string, indexer_path string) (
 	}
 
 	return lookup, nil
+}
+
+func HashLookupString(lookup_str string) string {
+	data := []byte(lookup_str)
+	return fmt.Sprintf("%x", sha1.Sum(data))
 }
