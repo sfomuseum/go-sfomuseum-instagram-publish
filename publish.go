@@ -3,9 +3,7 @@ package publish
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
-	_ "fmt"
 	"github.com/sfomuseum/go-sfomuseum-instagram/media"
 	sfom_reader "github.com/sfomuseum/go-sfomuseum-reader"
 	sfom_writer "github.com/sfomuseum/go-sfomuseum-writer"
@@ -14,16 +12,18 @@ import (
 	"github.com/whosonfirst/go-reader"
 	"github.com/whosonfirst/go-whosonfirst-export/v2"
 	"github.com/whosonfirst/go-writer"
+	"gocloud.dev/blob"
 	"log"
 	"sync"
 	"time"
 )
 
 type PublishOptions struct {
-	Lookup   *sync.Map
-	Reader   reader.Reader
-	Writer   writer.Writer
-	Exporter export.Exporter
+	Lookup      *sync.Map
+	Reader      reader.Reader
+	Writer      writer.Writer
+	Exporter    export.Exporter
+	MediaBucket *blob.Bucket
 }
 
 func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error {
@@ -38,13 +38,22 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 	body, err := media.AppendTakenAtTimestamp(ctx, body)
 
 	if err != nil {
-		return err
+		return fmt.Errorf("Failed to append taken at timestamp, %w", err)
+	}
+
+	if opts.MediaBucket != nil {
+
+		body, err = media.AppendHashes(ctx, body, opts.MediaBucket)
+
+		if err != nil {
+			return fmt.Errorf("Failed to append hashes, %w", err)
+		}
 	}
 
 	body, err = media.ExpandCaption(ctx, body)
 
 	if err != nil {
-		return err
+		return fmt.Errorf("Failed to expand caption, %w", err)
 	}
 
 	// We used to use media_id which is derived from the media file path.
@@ -63,7 +72,7 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 	// use caption + taken (or taken at) since many of these posts are posted
 	// automatically by tools like hootsuite so they end up with the same timestamps.
 	// For example:
-	
+
 	// https://raw.githubusercontent.com/sfomuseum-data/sfomuseum-data-socialmedia-instagram/main/data/172/935/502/5/1729355025.geojson?token={TOKEN}
 	// https://raw.githubusercontent.com/sfomuseum-data/sfomuseum-data-socialmedia-instagram/main/data/172/935/502/3/1729355023.geojson?token={TOKEN}
 
@@ -105,7 +114,7 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 	taken_rsp := gjson.GetBytes(body, "taken")
 
 	if !taken_rsp.Exists() {
-		return errors.New("Missing created timestamp")
+		return fmt.Errorf("Missing created timestamp")
 	}
 
 	taken := taken_rsp.Int()
@@ -139,7 +148,7 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 	excerpt_rsp := gjson.GetBytes(body, "caption.excerpt")
 
 	if !excerpt_rsp.Exists() {
-		return errors.New("Missing caption.excerpt")
+		return fmt.Errorf("Missing caption.excerpt")
 	}
 
 	wof_name := fmt.Sprintf("%s..", excerpt_rsp.String())
@@ -154,25 +163,25 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 	err = json.Unmarshal(body, &post)
 
 	if err != nil {
-		return err
+		return fmt.Errorf("Failed to unmarshal record, %w", err)
 	}
 
 	wof_record, err = sjson.SetBytes(wof_record, "properties.instagram:post", post)
 
 	if err != nil {
-		return err
+		return fmt.Errorf("Failed to append post, %w", err)
 	}
 
 	wof_record, err = opts.Exporter.Export(ctx, wof_record)
 
 	if err != nil {
-		return err
+		return fmt.Errorf("Failed to export record, %w", err)
 	}
 
 	id, err := sfom_writer.WriteFeatureBytes(ctx, opts.Writer, wof_record)
 
 	if err != nil {
-		return err
+		return fmt.Errorf("Failed to write record, %w", err)
 	}
 
 	log.Printf("Wrote %d\n", id)

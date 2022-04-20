@@ -7,18 +7,18 @@ import (
 
 import (
 	"bytes"
-	"image"
-	"crypto/sha256"
 	"context"
+	"crypto/sha256"
 	"flag"
 	"fmt"
-	"io"
+	"github.com/corona10/goimagehash"
 	"github.com/sfomuseum/go-sfomuseum-instagram/media"
 	"github.com/sfomuseum/go-sfomuseum-instagram/walk"
-	"log"
 	"github.com/tidwall/gjson"
 	"gocloud.dev/blob"
-	"github.com/corona10/goimagehash"
+	"image"
+	"io"
+	"log"
 	"path/filepath"
 	"sync"
 	"time"
@@ -27,7 +27,7 @@ import (
 func main() {
 
 	media_bucket_uri := flag.String("media-bucket-uri", "file:///Volumes/Museum/_Public/_Social_Media/SM downloads/2022/sfomuseum_20220418/", "...")
-	
+
 	flag.Parse()
 
 	ctx := context.Background()
@@ -39,7 +39,7 @@ func main() {
 	}
 
 	lookup := new(sync.Map)
-	
+
 	cb := func(ctx context.Context, body []byte) error {
 
 		path_rsp := gjson.GetBytes(body, "path")
@@ -61,7 +61,7 @@ func main() {
 		}
 
 		ts := t.Unix()
-		
+
 		img_fh, err := media_bucket.NewReader(ctx, rel_path, nil)
 
 		if err != nil {
@@ -78,15 +78,15 @@ func main() {
 
 		img_hash := fmt.Sprintf("%x", sha256.Sum256(img_body))
 		hash_key := fmt.Sprintf("%d-%s", ts, img_hash)
-		
+
 		v, exists := lookup.LoadOrStore(hash_key, rel_path)
 
 		if exists {
 			log.Printf("Existing image hash (%s) for %s: %s\n", img_hash, rel_path, v)
 		}
-		
+
 		p_hash := ""
-		
+
 		if filepath.Ext(rel_path) != ".mp4" {
 
 			im_r := bytes.NewReader(img_body)
@@ -104,25 +104,25 @@ func main() {
 
 			p_hash = avg_hash.ToString()
 
-			p_hash_key := fmt.Sprintf("%d-%s", ts, p_hash)			
+			p_hash_key := fmt.Sprintf("%d-%s", ts, p_hash)
 			v, exists := lookup.LoadOrStore(p_hash_key, rel_path)
-			
+
 			if exists {
 				log.Printf("Existing perceptual hash (%s) for %s: %s\n", p_hash, rel_path, v)
 			}
-			
+
 		}
-		
+
 		// log.Println(rel_path, img_hash, p_hash)
 		return nil
 	}
-	
+
 	walk_opts := &walk.WalkWithCallbackOptions{
 		Callback: cb,
 	}
 
 	args := flag.Args()
-	
+
 	for _, media_uri := range args {
 
 		media_fh, err := media.Open(ctx, media_uri)

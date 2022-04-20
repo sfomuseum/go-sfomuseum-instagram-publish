@@ -30,6 +30,8 @@ func main() {
 	reader_uri := flag.String("reader-uri", "fs:///usr/local/data/sfomuseum-data-socialmedia-instagram/data", "A valid whosonfirst/go-reader URI")
 	writer_uri := flag.String("writer-uri", "fs:///usr/local/data/sfomuseum-data-socialmedia-instagram/data", "A valid whosonfirst/go-writer URI")
 
+	media_bucket_uri := flag.String("media-bucket-uri", "", "A valid gocloud.dev/blob URI")
+
 	flag.Parse()
 
 	ctx := context.Background()
@@ -52,7 +54,7 @@ func main() {
 	exprtr, err := export.NewExporter(ctx, "sfomuseum://")
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to create new exported, %w", err)
 	}
 
 	lookup, err := publish.BuildLookup(ctx, *iterator_uri, *iterator_source)
@@ -62,10 +64,22 @@ func main() {
 	}
 
 	publish_opts := &publish.PublishOptions{
-		Lookup:   lookup,
-		Reader:   rdr,
-		Writer:   wrtr,
-		Exporter: exprtr,
+		Lookup:      lookup,
+		Reader:      rdr,
+		Writer:      wrtr,
+		Exporter:    exprtr,
+		MediaBucket: media_bucket,
+	}
+
+	if *media_bucket_uri != "" {
+
+		bucket, err := blob.OpenBucket(ctx, *media_bucket_uri)
+
+		if err != nil {
+			log.Fatalf("Failed to open media bucket, %w", err)
+		}
+
+		publish_opts.MediaBucket = bucket
 	}
 
 	max_procs := 10
