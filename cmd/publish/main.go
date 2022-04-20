@@ -4,8 +4,8 @@ import (
 	"context"
 	"flag"
 	_ "github.com/sfomuseum/go-sfomuseum-export/v2"
-	"github.com/sfomuseum/go-sfomuseum-instagram"
 	"github.com/sfomuseum/go-sfomuseum-instagram-publish"
+	"github.com/sfomuseum/go-sfomuseum-instagram/media"
 	"github.com/sfomuseum/go-sfomuseum-instagram/walk"
 	"github.com/whosonfirst/go-reader"
 	"github.com/whosonfirst/go-whosonfirst-export/v2"
@@ -86,7 +86,7 @@ func main() {
 
 	for _, media_uri := range args {
 
-		media_fh, err := instagram.OpenMedia(ctx, media_uri)
+		media_fh, err := media.Open(ctx, media_uri)
 
 		if err != nil {
 			log.Fatalf("Failed to open %s, %v", media_uri, err)

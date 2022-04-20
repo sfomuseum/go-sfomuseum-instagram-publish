@@ -595,8 +595,8 @@ github.com/sfomuseum/go-sfomuseum-export/v2 v2.3.6 h1:EF3N7AyGTDxo/yoXFhLnY/I0qH
 github.com/sfomuseum/go-sfomuseum-export/v2 v2.3.6/go.mod h1:WWJDFbaouciMMx7+70FkC/iyxum9ElV8TvcBPNDOgLE=
 github.com/sfomuseum/go-sfomuseum-geojson v0.1.3 h1:+OyduTQhBgVajdXFqXbX1hxuYY4IK56nYvaI/xtuPcY=
 github.com/sfomuseum/go-sfomuseum-geojson v0.1.3/go.mod h1:s9/XT2coL6uShnA1reWOfBSOMJsDIERERxdVZQkQQjI=
-github.com/sfomuseum/go-sfomuseum-instagram v0.1.1 h1:4+SAp7KYfRmfpDTOWUuvSImuk2YRU290D521CX29ykQ=
-github.com/sfomuseum/go-sfomuseum-instagram v0.1.1/go.mod h1:ksZkHj6UGleu2xWIUTHfhrDpbEEvG9bM87G4u3KLksI=
+github.com/sfomuseum/go-sfomuseum-instagram v0.1.2 h1:gIY5wmFGrZUKGD8LfROvalsaLps32COYxqFhwZy+3Bc=
+github.com/sfomuseum/go-sfomuseum-instagram v0.1.2/go.mod h1:ksZkHj6UGleu2xWIUTHfhrDpbEEvG9bM87G4u3KLksI=
 github.com/sfomuseum/go-sfomuseum-reader v0.0.2 h1:S1h8jUUGegWYCcF5tbX2E2rSji4y6W4HWG3bNGyG9XM=
 github.com/sfomuseum/go-sfomuseum-reader v0.0.2/go.mod h1:ixmpeo1E4fHGiXPBxC+DQ1fpY+5suZHpZveyA0OrBUE=
 github.com/sfomuseum/go-sfomuseum-writer v0.2.7 h1:ng+8lN13O7ckCJI5hZR4tDSvgYV3nNAAgTLiT76nkds=

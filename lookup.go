@@ -2,8 +2,8 @@ package publish
 
 import (
 	"context"
-	"crypto/sha1"
 	"fmt"
+	"github.com/sfomuseum/go-sfomuseum-instagram/media"
 	"github.com/tidwall/gjson"
 	_ "github.com/whosonfirst/go-whosonfirst-iterate-git/v2"
 	"github.com/whosonfirst/go-whosonfirst-iterate/v2/iterator"
@@ -34,20 +34,12 @@ func BuildLookup(ctx context.Context, indexer_uri string, indexer_path string) (
 
 		wof_id := wof_rsp.Int()
 
-		/*
-			media_rsp := gjson.GetBytes(body, "properties.instagram:post.media_id")
-
-			if !media_rsp.Exists() {
-				return fmt.Errorf("Missing Twitter ID for record %d", wof_id)
-			}
-
-			media_id := media_rsp.String()
-		*/
+		// See notes about lookup_keys (and media_id) in publish.go
 
 		caption_rsp := gjson.GetBytes(body, "properties.instagram:post.caption.body")
 		caption := caption_rsp.String()
 
-		lookup_key := HashLookupString(caption)
+		lookup_key := media.DeriveMediaIdFromString(caption)
 
 		lookup.Store(lookup_key, wof_id)
 
@@ -68,9 +60,4 @@ func BuildLookup(ctx context.Context, indexer_uri string, indexer_path string) (
 	}
 
 	return lookup, nil
-}
-
-func HashLookupString(lookup_str string) string {
-	data := []byte(lookup_str)
-	return fmt.Sprintf("%x", sha1.Sum(data))
 }

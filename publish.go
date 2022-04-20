@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 	_ "fmt"
-	"github.com/sfomuseum/go-sfomuseum-instagram/document"
+	"github.com/sfomuseum/go-sfomuseum-instagram/media"
 	sfom_reader "github.com/sfomuseum/go-sfomuseum-reader"
 	sfom_writer "github.com/sfomuseum/go-sfomuseum-writer"
 	"github.com/tidwall/gjson"
@@ -35,39 +35,34 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 		// pass
 	}
 
-	body, err := document.AppendTakenAtTimestamp(ctx, body)
+	body, err := media.AppendTakenAtTimestamp(ctx, body)
 
 	if err != nil {
 		return err
 	}
 
 	// Fix me
-	body, err = document.AppendMediaIDFromPath(ctx, body)
+	body, err = media.AppendMediaIDFromPath(ctx, body)
 
 	if err != nil {
 		return err
 	}
 
-	body, err = document.ExpandCaption(ctx, body)
+	body, err = media.ExpandCaption(ctx, body)
 
 	if err != nil {
 		return err
 	}
 
-	/*
-		id_rsp := gjson.GetBytes(body, "media_id")
-
-		if !id_rsp.Exists() {
-			return errors.New("Missing 'media_id' property")
-		}
-
-		media_id := id_rsp.String()
-	*/
+	// We used to use media_id which is derived from the media file path.
+	// However between Oct 2020 and April 2022 those paths changed from
+	// being something like {HASH}.jpg to {SOME}-{THING}-{SOME}-{THING}.jpg
+	// The former allows us to use {HASH} in the mf.sfom URL.
 
 	caption_rsp := gjson.GetBytes(body, "caption.body")
 	caption := caption_rsp.String()
 
-	lookup_key := HashLookupString(caption)
+	lookup_key := media.DeriveMediaIdFromString(caption)
 
 	pointer, ok := opts.Lookup.Load(lookup_key)
 
