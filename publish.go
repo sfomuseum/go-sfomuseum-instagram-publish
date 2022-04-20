@@ -52,7 +52,20 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 	// being something like {HASH}.jpg to {SOME}-{THING}-{SOME}-{THING}.jpg
 	// The former allows us to use {HASH} in the mf.sfom URL.
 
-	// QUESTION: Do we really need media ID?
+	// You might be asking yourself: Do we really need media ID? The answer
+	// is yes. More specifically we need something that we can for reliably
+	// de-depuplicating IG posts we've already imported. As stated we originally
+	// thought we could rely on the path of the media file associated with a
+	// post but apparently not (they seem to change).
+
+	// Unfortunately for SFO Museum we can't use the body of the caption either
+	// since we sometimes use the same caption for multiple posts. Nor can we
+	// use caption + taken (or taken at) since many of these posts are posted
+	// automatically by tools like hootsuite so they end up with the same timestamps.
+	// For example:
+	
+	// https://raw.githubusercontent.com/sfomuseum-data/sfomuseum-data-socialmedia-instagram/main/data/172/935/502/5/1729355025.geojson?token={TOKEN}
+	// https://raw.githubusercontent.com/sfomuseum-data/sfomuseum-data-socialmedia-instagram/main/data/172/935/502/3/1729355023.geojson?token={TOKEN}
 
 	caption_rsp := gjson.GetBytes(body, "caption.body")
 	caption := caption_rsp.String()
