@@ -90,7 +90,10 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 
 	pointer, ok := opts.Lookup.Load(media_id)
 
-	log.Println(media_id, ok, pointer)
+	if ok {
+		log.Println(media_id, ok, pointer)
+	}
+
 	return nil
 
 	var wof_record []byte

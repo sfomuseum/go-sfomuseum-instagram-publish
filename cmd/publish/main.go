@@ -1,7 +1,7 @@
 // publish is a command-line tool to merge Instagram posts defined in one or more "media.json" files
 // with the sfomuseum-data-socialmedia-instagram repository. For example:
 //
-//	$> ./bin/publish file:///usr/local/data/media.json
+//	$> ./bin/publish -media-bucket-uri file:///Volumes/Museum/_Public/_Social_Media/SM\ downloads/2022/sfomuseum_20220418/ file:///usr/local/data/media.json
 //
 // Important: As of April, 2022 Instagram no longer publishes "media.json" files with the export bundles.
 // Use the sfomuseum/go-sfomuseum-instagram/cmd/derive-media-json tool to create a media.json file from
@@ -34,7 +34,7 @@ func main() {
 	reader_uri := flag.String("reader-uri", "fs:///usr/local/data/sfomuseum-data-socialmedia-instagram/data", "A valid whosonfirst/go-reader URI")
 	writer_uri := flag.String("writer-uri", "fs:///usr/local/data/sfomuseum-data-socialmedia-instagram/data", "A valid whosonfirst/go-writer URI")
 
-	media_bucket_uri := flag.String("media-bucket-uri", "s3blob://sfomuseum-media?prefix=media/instagram/&region=us-west-2&credentials=session", "A valid gocloud.dev/blob URI")
+	media_bucket_uri := flag.String("media-bucket-uri", "", "A valid gocloud.dev/blob URI where Instagram (export) media files are stored.")
 
 	flag.Parse()
 

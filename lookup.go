@@ -41,16 +41,16 @@ func BuildLookup(ctx context.Context, indexer_uri string, indexer_path string) (
 
 		if phash_rsp.Exists() {
 
-			id_rsp := gjson.GetBytes(body, "properties.instagram:post.media_id")
+			m, err := DeriveMediaId(body, "properties.instagram:post")
 
-			if !id_rsp.Exists() {
-				return fmt.Errorf("Record (%d) has perceptual hash but no media ID", wof_id)
+			if err != nil {
+				return fmt.Errorf("Failed to derive media ID for %s, %w", path, err)
 			}
 
-			media_id = id_rsp.String()
+			media_id = m
 
 		} else {
-			
+
 			log.Printf("%s is missing hash\n", path)
 			return nil
 		}

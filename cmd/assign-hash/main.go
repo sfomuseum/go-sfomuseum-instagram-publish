@@ -59,7 +59,7 @@ func main() {
 		phash_rsp := gjson.GetBytes(body, "properties.instagram:post.perceptual_hash")
 
 		if phash_rsp.Exists() {
-			return nil
+			// return nil
 		}
 
 		id_rsp := gjson.GetBytes(body, "properties.instagram:post.media_id")
