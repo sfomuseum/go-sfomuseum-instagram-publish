@@ -18,6 +18,7 @@ import (
 	"github.com/whosonfirst/go-reader"
 	"github.com/whosonfirst/go-whosonfirst-export/v2"
 	"github.com/whosonfirst/go-writer"
+	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/fileblob"
 	"log"
 )
@@ -63,23 +64,18 @@ func main() {
 		log.Fatalf("Failed to build lookup, %v", err)
 	}
 
+	media_bucket, err := blob.OpenBucket(ctx, *media_bucket_uri)
+
+	if err != nil {
+		log.Fatalf("Failed to open media bucket, %w", err)
+	}
+
 	publish_opts := &publish.PublishOptions{
 		Lookup:      lookup,
 		Reader:      rdr,
 		Writer:      wrtr,
 		Exporter:    exprtr,
 		MediaBucket: media_bucket,
-	}
-
-	if *media_bucket_uri != "" {
-
-		bucket, err := blob.OpenBucket(ctx, *media_bucket_uri)
-
-		if err != nil {
-			log.Fatalf("Failed to open media bucket, %w", err)
-		}
-
-		publish_opts.MediaBucket = bucket
 	}
 
 	max_procs := 10

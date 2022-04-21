@@ -41,13 +41,10 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 		return fmt.Errorf("Failed to append taken at timestamp, %w", err)
 	}
 
-	if opts.MediaBucket != nil {
+	body, err = media.AppendHashes(ctx, body, opts.MediaBucket)
 
-		body, err = media.AppendHashes(ctx, body, opts.MediaBucket)
-
-		if err != nil {
-			return fmt.Errorf("Failed to append hashes, %w", err)
-		}
+	if err != nil {
+		return fmt.Errorf("Failed to append hashes, %w", err)
 	}
 
 	body, err = media.ExpandCaption(ctx, body)
@@ -76,14 +73,21 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 	// https://raw.githubusercontent.com/sfomuseum-data/sfomuseum-data-socialmedia-instagram/main/data/172/935/502/5/1729355025.geojson?token={TOKEN}
 	// https://raw.githubusercontent.com/sfomuseum-data/sfomuseum-data-socialmedia-instagram/main/data/172/935/502/3/1729355023.geojson?token={TOKEN}
 
-	caption_rsp := gjson.GetBytes(body, "caption.body")
-	caption := caption_rsp.String()
+	media_id, err := DeriveMediaId(body, "")
 
-	lookup_key := media.DeriveMediaIdFromString(caption)
+	if err != nil {
+		return fmt.Errorf("Failed to derive media ID, %w", err)
+	}
 
-	pointer, ok := opts.Lookup.Load(lookup_key)
+	body, err = sjson.SetBytes(body, "media_id", media_id)
 
-	log.Println(lookup_key, ok, pointer)
+	if err != nil {
+		return fmt.Errorf("Failed to assign media_id to post, %w", err)
+	}
+
+	pointer, ok := opts.Lookup.Load(media_id)
+
+	log.Println(media_id, ok, pointer)
 	return nil
 
 	var wof_record []byte

@@ -3,7 +3,6 @@ package publish
 import (
 	"context"
 	"fmt"
-	"github.com/sfomuseum/go-sfomuseum-instagram/media"
 	"github.com/tidwall/gjson"
 	_ "github.com/whosonfirst/go-whosonfirst-iterate-git/v2"
 	"github.com/whosonfirst/go-whosonfirst-iterate/v2/iterator"
@@ -36,11 +35,29 @@ func BuildLookup(ctx context.Context, indexer_uri string, indexer_path string) (
 
 		// See notes about lookup_keys (and media_id) in publish.go
 
-		caption_rsp := gjson.GetBytes(body, "properties.instagram:post.caption.body")
-		caption := caption_rsp.String()
+		var media_id string
 
-		lookup_key := media.DeriveMediaIdFromString(caption)
-		lookup.Store(lookup_key, wof_id)
+		phash_rsp := gjson.GetBytes(body, "properties.instagram:post.perceptual_hash")
+
+		if phash_rsp.Exists() {
+
+			id_rsp := gjson.GetBytes(body, "properties.instagram:post.media_id")
+
+			if !id_rsp.Exists() {
+				return fmt.Errorf("Record (%d) has perceptual hash but no media ID", wof_id)
+			}
+
+			media_id = id_rsp.String()
+
+		} else {
+
+			// I AM HERE
+			// Need to fetch and hash image from sfomuseum-media bucket here...
+			return fmt.Errorf("Not implemented (yet)")
+
+		}
+
+		lookup.Store(media_id, wof_id)
 
 		atomic.AddInt32(&count, 1)
 		return nil
