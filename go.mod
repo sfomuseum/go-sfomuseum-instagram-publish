@@ -4,7 +4,7 @@ go 1.16
 
 require (
 	github.com/aaronland/gocloud-blob-s3 v0.2.0
-	github.com/sfomuseum/go-sfomuseum-instagram v0.2.1
+	github.com/sfomuseum/go-sfomuseum-instagram v0.2.4
 	github.com/sfomuseum/go-sfomuseum-reader v0.0.2
 	github.com/sfomuseum/go-sfomuseum-writer v0.2.7
 	github.com/tidwall/gjson v1.14.1

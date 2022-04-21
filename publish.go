@@ -32,7 +32,7 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 	default:
 		// pass
 	}
-
+	
 	body, err := media.AppendTakenAtTimestamp(ctx, body)
 
 	if err != nil {
@@ -90,9 +90,7 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 
 	pointer, ok := opts.Lookup.Load(media_id)
 
-	if ok {
-		log.Println(media_id, ok, pointer)
-	}
+	log.Println(media_id, ok, pointer)
 
 	return nil
 
