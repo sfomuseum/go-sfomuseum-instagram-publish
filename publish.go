@@ -10,7 +10,6 @@ import (
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
 	"github.com/whosonfirst/go-reader"
-	"github.com/whosonfirst/go-whosonfirst-export/v2"
 	"github.com/whosonfirst/go-writer"
 	"gocloud.dev/blob"
 	"log"
@@ -22,7 +21,6 @@ type PublishOptions struct {
 	Lookup      *sync.Map
 	Reader      reader.Reader
 	Writer      writer.Writer
-	Exporter    export.Exporter
 	MediaBucket *blob.Bucket
 }
 
@@ -179,12 +177,6 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 
 	if err != nil {
 		return fmt.Errorf("Failed to append post, %w", err)
-	}
-
-	wof_record, err = opts.Exporter.Export(ctx, wof_record)
-
-	if err != nil {
-		return fmt.Errorf("Failed to export record, %w", err)
 	}
 
 	id, err := sfom_writer.WriteFeatureBytes(ctx, opts.Writer, wof_record)

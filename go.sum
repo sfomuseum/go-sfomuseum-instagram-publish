@@ -710,8 +710,9 @@ github.com/tidwall/gjson v1.6.8/go.mod h1:zeFuBCIqD4sN/gmqBzZ4j7Jd6UcA2Fc56x7QFs
 github.com/tidwall/gjson v1.9.3/go.mod h1:/wbyibRr2FHMks5tjHJ5F8dMZh3AcwJEMf5vlfC0lxk=
 github.com/tidwall/gjson v1.12.1/go.mod h1:/wbyibRr2FHMks5tjHJ5F8dMZh3AcwJEMf5vlfC0lxk=
 github.com/tidwall/gjson v1.13.0/go.mod h1:/wbyibRr2FHMks5tjHJ5F8dMZh3AcwJEMf5vlfC0lxk=
-github.com/tidwall/gjson v1.14.0 h1:6aeJ0bzojgWLa82gDQHcx3S0Lr/O51I9bJ5nv6JFx5w=
 github.com/tidwall/gjson v1.14.0/go.mod h1:/wbyibRr2FHMks5tjHJ5F8dMZh3AcwJEMf5vlfC0lxk=
+github.com/tidwall/gjson v1.14.1 h1:iymTbGkQBhveq21bEvAQ81I0LEBork8BFe1CUZXdyuo=
+github.com/tidwall/gjson v1.14.1/go.mod h1:/wbyibRr2FHMks5tjHJ5F8dMZh3AcwJEMf5vlfC0lxk=
 github.com/tidwall/match v1.0.1/go.mod h1:LujAq0jyVjBy028G1WhWfIzbpQfMO8bBZ6Tyb0+pL9E=
 github.com/tidwall/match v1.0.3/go.mod h1:eRSPERbgtNPcGhD8UCthc6PmLEQXEWd3PRB5JTxsfmM=
 github.com/tidwall/match v1.1.1 h1:+Ho715JplO36QYgwN9PGYNhgZvoUSc9X2c80KVTi+GA=
@@ -736,9 +737,8 @@ github.com/whosonfirst/go-reader v0.10.0/go.mod h1:YNcxm9xr0++Jz4nXWZjtQ/RRVq0fC
 github.com/whosonfirst/go-whosonfirst-cli v0.1.0/go.mod h1:Edy+amD+fMq1QS1yxB3u8maA8I93q/LG7JRNh+fsdfc=
 github.com/whosonfirst/go-whosonfirst-crawl v0.2.1 h1:nNG7r7/4MaII/NM8Df2oqgfgVNBDoIKlseleoX1vw1Q=
 github.com/whosonfirst/go-whosonfirst-crawl v0.2.1/go.mod h1:MTD1TCgAkXlAtysPU98ylrz9Y5+ZCfRrsrBnRyiH/t8=
+github.com/whosonfirst/go-whosonfirst-export/v2 v2.4.1 h1:Xel8DH2SRCeSBgUlxgVJMt0wxS7yeIeYIBT8avQ927Q=
 github.com/whosonfirst/go-whosonfirst-export/v2 v2.4.1/go.mod h1:ZT5g5W34H4ymvxkSQXNJ+DPSl61J+u/5/uS9QxRLiPw=
-github.com/whosonfirst/go-whosonfirst-export/v2 v2.4.2 h1:7VK59x+khENOtu9V0qfpObAHbfFq6j67k/GFTzbjC+0=
-github.com/whosonfirst/go-whosonfirst-export/v2 v2.4.2/go.mod h1:ruEZ8HfXvc+krTXc4SdykS/c/benSEXSQekfZ+rnFjI=
 github.com/whosonfirst/go-whosonfirst-flags v0.2.0/go.mod h1:ECd0AJJZIlybmjTGB9z+CPz9pSiMTwxur7fPKmDnoqI=
 github.com/whosonfirst/go-whosonfirst-flags v0.4.2/go.mod h1:kewFjxBiE00SqjjIanm5DPI81SYvx93wVb3ogwV/PMk=
 github.com/whosonfirst/go-whosonfirst-flags v0.4.3 h1:ef6IkgvYADL4kc750sl6i5hkReNq0Z6upLcqpK2CHLY=

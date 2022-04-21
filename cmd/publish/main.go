@@ -9,17 +9,20 @@
 package main
 
 import (
+	_ "github.com/aaronland/gocloud-blob-s3"
+	_ "gocloud.dev/blob/fileblob"
+	_ "image/jpeg"
+)
+
+import (
 	"context"
 	"flag"
-	_ "github.com/sfomuseum/go-sfomuseum-export/v2"
 	"github.com/sfomuseum/go-sfomuseum-instagram-publish"
 	"github.com/sfomuseum/go-sfomuseum-instagram/media"
 	"github.com/sfomuseum/go-sfomuseum-instagram/walk"
 	"github.com/whosonfirst/go-reader"
-	"github.com/whosonfirst/go-whosonfirst-export/v2"
 	"github.com/whosonfirst/go-writer"
 	"gocloud.dev/blob"
-	_ "gocloud.dev/blob/fileblob"
 	"log"
 )
 
@@ -31,7 +34,7 @@ func main() {
 	reader_uri := flag.String("reader-uri", "fs:///usr/local/data/sfomuseum-data-socialmedia-instagram/data", "A valid whosonfirst/go-reader URI")
 	writer_uri := flag.String("writer-uri", "fs:///usr/local/data/sfomuseum-data-socialmedia-instagram/data", "A valid whosonfirst/go-writer URI")
 
-	media_bucket_uri := flag.String("media-bucket-uri", "", "A valid gocloud.dev/blob URI")
+	media_bucket_uri := flag.String("media-bucket-uri", "s3blob://sfomuseum-media?prefix=media/instagram/&region=us-west-2&credentials=session", "A valid gocloud.dev/blob URI")
 
 	flag.Parse()
 
@@ -52,12 +55,6 @@ func main() {
 		log.Fatalf("Failed to create writer, %v", err)
 	}
 
-	exprtr, err := export.NewExporter(ctx, "sfomuseum://")
-
-	if err != nil {
-		log.Fatalf("Failed to create new exported, %v", err)
-	}
-
 	lookup, err := publish.BuildLookup(ctx, *iterator_uri, *iterator_source)
 
 	if err != nil {
@@ -74,7 +71,6 @@ func main() {
 		Lookup:      lookup,
 		Reader:      rdr,
 		Writer:      wrtr,
-		Exporter:    exprtr,
 		MediaBucket: media_bucket,
 	}
 

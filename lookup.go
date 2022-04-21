@@ -7,7 +7,7 @@ import (
 	_ "github.com/whosonfirst/go-whosonfirst-iterate-git/v2"
 	"github.com/whosonfirst/go-whosonfirst-iterate/v2/iterator"
 	"io"
-	_ "log"
+	"log"
 	"sync"
 	"sync/atomic"
 )
@@ -50,11 +50,9 @@ func BuildLookup(ctx context.Context, indexer_uri string, indexer_path string) (
 			media_id = id_rsp.String()
 
 		} else {
-
-			// I AM HERE
-			// Need to fetch and hash image from sfomuseum-media bucket here...
-			return fmt.Errorf("Not implemented (yet)")
-
+			
+			log.Printf("%s is missing hash\n", path)
+			return nil
 		}
 
 		lookup.Store(media_id, wof_id)

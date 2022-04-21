@@ -7,12 +7,6 @@
 package main
 
 import (
-	_ "github.com/aaronland/gocloud-blob-s3"
-	_ "gocloud.dev/blob/fileblob"
-	_ "image/jpeg"
-)
-
-import (
 	"context"
 	"flag"
 	"fmt"
