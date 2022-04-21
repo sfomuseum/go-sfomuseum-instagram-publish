@@ -31,7 +31,7 @@ func DeriveMediaId(body []byte, prefix string) (string, error) {
 	// This is in case IG decides to change how datetime strings are formatted
 	// again. If they do we will update the layout passed to time.Parse but
 	// continue to use that (now old) layout to format strings. Good times...
-	
+
 	t, err := time.Parse(media.TIME_FORMAT, taken_rsp.String())
 
 	if err != nil {
@@ -41,7 +41,7 @@ func DeriveMediaId(body []byte, prefix string) (string, error) {
 	taken_at := t.Format(media.TIME_FORMAT)
 
 	// END OF ok, see this?
-	
+
 	phash_rsp := gjson.GetBytes(body, path_phash)
 
 	if !phash_rsp.Exists() {
@@ -49,7 +49,7 @@ func DeriveMediaId(body []byte, prefix string) (string, error) {
 	}
 
 	phash := phash_rsp.String()
-	
+
 	media_id := fmt.Sprintf("%s %s", taken_at, phash)
 
 	// log.Println("Derive", media_id)

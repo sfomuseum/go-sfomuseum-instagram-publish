@@ -32,7 +32,7 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 	default:
 		// pass
 	}
-	
+
 	body, err := media.AppendTakenAtTimestamp(ctx, body)
 
 	if err != nil {
@@ -90,10 +90,6 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 
 	pointer, ok := opts.Lookup.Load(media_id)
 
-	log.Println(media_id, ok, pointer)
-
-	return nil
-
 	var wof_record []byte
 
 	if ok {
@@ -107,6 +103,19 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 		}
 
 		wof_record = wof_body
+
+		// See this? We are going to ensure we don't accidentally overwrite an
+		// existing media ID. For example the inputs for deriving a media ID
+		// changed between 202010 and 202204 to reflect changes IG made to their
+		// exports.
+
+		id_rsp := gjson.GetBytes(wof_body, "properties.instagram:post.media_id")
+
+		body, err = sjson.SetBytes(body, "media_id", id_rsp.String())
+
+		if err != nil {
+			return fmt.Errorf("Failed to assign media_id to post, %w", err)
+		}
 
 	} else {
 
