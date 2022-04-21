@@ -55,7 +55,7 @@ func main() {
 	exprtr, err := export.NewExporter(ctx, "sfomuseum://")
 
 	if err != nil {
-		log.Fatalf("Failed to create new exported, %w", err)
+		log.Fatalf("Failed to create new exported, %v", err)
 	}
 
 	lookup, err := publish.BuildLookup(ctx, *iterator_uri, *iterator_source)
@@ -67,7 +67,7 @@ func main() {
 	media_bucket, err := blob.OpenBucket(ctx, *media_bucket_uri)
 
 	if err != nil {
-		log.Fatalf("Failed to open media bucket, %w", err)
+		log.Fatalf("Failed to open media bucket, %v", err)
 	}
 
 	publish_opts := &publish.PublishOptions{

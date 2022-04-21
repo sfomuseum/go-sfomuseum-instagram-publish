@@ -41,7 +41,12 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 		return fmt.Errorf("Failed to append taken at timestamp, %w", err)
 	}
 
-	body, err = media.AppendHashes(ctx, body, opts.MediaBucket)
+	append_opts := &media.AppendHashesOptions{
+		Bucket:         opts.MediaBucket,
+		PerceptualHash: true,
+	}
+
+	body, err = media.AppendHashes(ctx, append_opts, body)
 
 	if err != nil {
 		return fmt.Errorf("Failed to append hashes, %w", err)
