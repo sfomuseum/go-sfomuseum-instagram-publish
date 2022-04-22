@@ -15,10 +15,12 @@ func DeriveMediaId(body []byte, prefix string) (string, error) {
 
 	path_taken := "taken_at"
 	path_phash := "perceptual_hash"
+	path_fhash := "file_hash"
 
 	if prefix != "" {
 		path_taken = fmt.Sprintf("%s.%s", prefix, path_taken)
 		path_phash = fmt.Sprintf("%s.%s", prefix, path_phash)
+		path_fhash = fmt.Sprintf("%s.%s", prefix, path_fhash)
 	}
 
 	taken_rsp := gjson.GetBytes(body, path_taken)
@@ -42,15 +44,20 @@ func DeriveMediaId(body []byte, prefix string) (string, error) {
 
 	// END OF ok, see this?
 
-	phash_rsp := gjson.GetBytes(body, path_phash)
+	hash_rsp := gjson.GetBytes(body, path_phash)
 
-	if !phash_rsp.Exists() {
-		return "", fmt.Errorf("Missing '%s' property", path_phash)
+	if !hash_rsp.Exists() {
+		hash_rsp = gjson.GetBytes(body, path_fhash)
 	}
 
-	phash := phash_rsp.String()
+	if !hash_rsp.Exists() {
+		return "", fmt.Errorf("Missing both '%s' and '%s' property", path_phash, path_fhash)
 
-	media_id := fmt.Sprintf("%s %s", taken_at, phash)
+	}
+
+	hash := hash_rsp.String()
+
+	media_id := fmt.Sprintf("%s %s", taken_at, hash)
 
 	// log.Println("Derive", media_id)
 	return media.DeriveMediaIdFromString(media_id), nil

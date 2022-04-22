@@ -12,7 +12,8 @@ import (
 	"github.com/whosonfirst/go-reader"
 	"github.com/whosonfirst/go-writer"
 	"gocloud.dev/blob"
-	"log"
+	_ "log"
+	"path/filepath"
 	"sync"
 	"time"
 )
@@ -33,6 +34,20 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 		// pass
 	}
 
+	path_rsp := gjson.GetBytes(body, "path")
+	path := path_rsp.String()
+
+	is_video := false
+
+	// This should be a little more sophisticated
+	if filepath.Ext(path) == ".mp4" {
+		is_video = true
+	}
+
+	if !is_video {
+		return nil
+	}
+
 	body, err := media.AppendTakenAtTimestamp(ctx, body)
 
 	if err != nil {
@@ -40,8 +55,13 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 	}
 
 	append_opts := &media.AppendHashesOptions{
-		Bucket:         opts.MediaBucket,
-		PerceptualHash: true,
+		Bucket: opts.MediaBucket,
+	}
+
+	if is_video {
+		append_opts.FileHash = true
+	} else {
+		append_opts.PerceptualHash = true
 	}
 
 	body, err = media.AppendHashes(ctx, append_opts, body)
@@ -189,13 +209,12 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 		return fmt.Errorf("Failed to append post, %w", err)
 	}
 
-	id, err := sfom_writer.WriteFeatureBytes(ctx, opts.Writer, wof_record)
+	_, err = sfom_writer.WriteFeatureBytes(ctx, opts.Writer, wof_record)
 
 	if err != nil {
 		return fmt.Errorf("Failed to write record, %w", err)
 	}
 
-	log.Printf("Wrote %d\n", id)
 	return nil
 }
 
