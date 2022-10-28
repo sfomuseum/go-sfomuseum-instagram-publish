@@ -21,7 +21,7 @@ import (
 	"github.com/sfomuseum/go-sfomuseum-instagram/media"
 	"github.com/sfomuseum/go-sfomuseum-instagram/walk"
 	"github.com/whosonfirst/go-reader"
-	"github.com/whosonfirst/go-writer"
+	"github.com/whosonfirst/go-writer/v3"
 	"gocloud.dev/blob"
 	"log"
 )
