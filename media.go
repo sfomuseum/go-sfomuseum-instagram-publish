@@ -2,10 +2,11 @@ package publish
 
 import (
 	"fmt"
-	"github.com/sfomuseum/go-sfomuseum-instagram/media"
-	"github.com/tidwall/gjson"
 	_ "log"
 	"time"
+
+	"github.com/sfomuseum/go-sfomuseum-instagram/media"
+	"github.com/tidwall/gjson"
 )
 
 // DeriveMediaId will derive a (hopefully) persistent SFO Museum specific media ID

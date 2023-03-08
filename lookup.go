@@ -3,13 +3,14 @@ package publish
 import (
 	"context"
 	"fmt"
-	"github.com/tidwall/gjson"
-	_ "github.com/whosonfirst/go-whosonfirst-iterate-git/v2"
-	"github.com/whosonfirst/go-whosonfirst-iterate/v2/iterator"
 	"io"
 	"log"
 	"sync"
 	"sync/atomic"
+
+	"github.com/tidwall/gjson"
+	_ "github.com/whosonfirst/go-whosonfirst-iterate-git/v2"
+	"github.com/whosonfirst/go-whosonfirst-iterate/v2/iterator"
 )
 
 func BuildLookup(ctx context.Context, indexer_uri string, indexer_path string) (*sync.Map, error) {

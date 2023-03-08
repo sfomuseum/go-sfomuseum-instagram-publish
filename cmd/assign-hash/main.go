@@ -10,17 +10,18 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"io"
+	"log"
+	"path/filepath"
+
 	"github.com/sfomuseum/go-sfomuseum-instagram-publish/secret"
 	"github.com/sfomuseum/go-sfomuseum-instagram/hash"
-	sfom_writer "github.com/sfomuseum/go-sfomuseum-writer/v2"
+	sfom_writer "github.com/sfomuseum/go-sfomuseum-writer/v3"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
 	"github.com/whosonfirst/go-whosonfirst-iterate/v2/iterator"
 	"github.com/whosonfirst/go-writer/v3"
 	"gocloud.dev/blob"
-	"io"
-	"log"
-	"path/filepath"
 )
 
 func main() {
@@ -97,7 +98,7 @@ func main() {
 			return fmt.Errorf("Failed to assign perceptual hash to %s, %w", path, err)
 		}
 
-		_, err = sfom_writer.WriteFeatureBytes(ctx, wr, body)
+		_, err = sfom_writer.WriteBytes(ctx, wr, body)
 
 		if err != nil {
 			return fmt.Errorf("Failed to write %s, %w", path, err)

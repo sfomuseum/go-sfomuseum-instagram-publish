@@ -10,10 +10,11 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/sfomuseum/go-sfomuseum-instagram/hash"
 	_ "image/jpeg"
 	"log"
 	"os"
+
+	"github.com/sfomuseum/go-sfomuseum-instagram/hash"
 )
 
 func main() {

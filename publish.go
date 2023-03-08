@@ -4,18 +4,19 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	_ "log"
+	"path/filepath"
+	"sync"
+	"time"
+
 	"github.com/sfomuseum/go-sfomuseum-instagram/media"
 	sfom_reader "github.com/sfomuseum/go-sfomuseum-reader"
-	sfom_writer "github.com/sfomuseum/go-sfomuseum-writer/v2"
+	sfom_writer "github.com/sfomuseum/go-sfomuseum-writer/v3"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
 	"github.com/whosonfirst/go-reader"
 	"github.com/whosonfirst/go-writer/v3"
 	"gocloud.dev/blob"
-	_ "log"
-	"path/filepath"
-	"sync"
-	"time"
 )
 
 type PublishOptions struct {
@@ -209,7 +210,7 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 		return fmt.Errorf("Failed to append post, %w", err)
 	}
 
-	_, err = sfom_writer.WriteFeatureBytes(ctx, opts.Writer, wof_record)
+	_, err = sfom_writer.WriteBytes(ctx, opts.Writer, wof_record)
 
 	if err != nil {
 		return fmt.Errorf("Failed to write record, %w", err)

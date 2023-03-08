@@ -5,16 +5,17 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/sfomuseum/go-sfomuseum-instagram/media"
-	sfom_writer "github.com/sfomuseum/go-sfomuseum-writer/v2"
-	"github.com/tidwall/gjson"
-	"github.com/tidwall/sjson"
-	"github.com/whosonfirst/go-whosonfirst-iterate/v2/iterator"
-	"github.com/whosonfirst/go-writer/v3"
 	"io"
 	"log"
 	_ "log"
 	"time"
+
+	"github.com/sfomuseum/go-sfomuseum-instagram/media"
+	sfom_writer "github.com/sfomuseum/go-sfomuseum-writer/v3"
+	"github.com/tidwall/gjson"
+	"github.com/tidwall/sjson"
+	"github.com/whosonfirst/go-whosonfirst-iterate/v2/iterator"
+	"github.com/whosonfirst/go-writer/v3"
 )
 
 func fix_date(str_t string) time.Time {
@@ -79,7 +80,7 @@ func main() {
 			return fmt.Errorf("Failed to assign taken to %s, %w", path, err)
 		}
 
-		_, err = sfom_writer.WriteFeatureBytes(ctx, wr, body)
+		_, err = sfom_writer.WriteBytes(ctx, wr, body)
 
 		if err != nil {
 			return fmt.Errorf("Failed to write %s, %w", path, err)
