@@ -32,8 +32,8 @@ func main() {
 	iterator_uri := flag.String("iterator-uri", "repo://", "A valid whosonfirst/go-whosonfirst-iterate/v2 URI")
 	iterator_source := flag.String("iterator-source", "/usr/local/data/sfomuseum-data-socialmedia-instagram", "...")
 
-	reader_uri := flag.String("reader-uri", "fs:///usr/local/data/sfomuseum-data-socialmedia-instagram/data", "A valid whosonfirst/go-reader URI")
-	writer_uri := flag.String("writer-uri", "fs:///usr/local/data/sfomuseum-data-socialmedia-instagram/data", "A valid whosonfirst/go-writer URI")
+	reader_uri := flag.String("reader-uri", "repo:///usr/local/data/sfomuseum-data-socialmedia-instagram", "A valid whosonfirst/go-reader URI")
+	writer_uri := flag.String("writer-uri", "repo:///usr/local/data/sfomuseum-data-socialmedia-instagram", "A valid whosonfirst/go-writer URI")
 
 	media_bucket_uri := flag.String("media-bucket-uri", "", "A valid gocloud.dev/blob URI where Instagram (export) media files are stored.")
 
