@@ -45,10 +45,6 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 		is_video = true
 	}
 
-	if !is_video {
-		return nil
-	}
-
 	body, err := media.AppendTakenAtTimestamp(ctx, body)
 
 	if err != nil {
@@ -109,7 +105,17 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 		return fmt.Errorf("Failed to assign media_id to post, %w", err)
 	}
 
+	// lookup.go
+
 	pointer, ok := opts.Lookup.Load(media_id)
+
+	// Add path to the file as a fallback because apparently IG does stuff to the
+	// photos between archive runs that causes the percaptual hash to change. Good
+	// times...
+
+	if !ok {
+		pointer, ok = opts.Lookup.Load(path)
+	}
 
 	var wof_record []byte
 

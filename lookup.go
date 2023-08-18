@@ -58,6 +58,25 @@ func BuildLookup(ctx context.Context, indexer_uri string, indexer_path string) (
 
 		lookup.Store(media_id, wof_id)
 
+		// Add path to the file as a fallback because apparently IG does stuff to the
+		// photos between archive runs that causes the percaptual hash to change. Good
+		// times...
+
+		path_rsp := gjson.GetBytes(body, "properties.instagram:post.media_id")
+
+		if path_rsp.Exists() {
+
+			path := path_rsp.String()
+
+			v, exists := lookup.Load(path)
+
+			if exists && v.(int64) != wof_id {
+				return fmt.Errorf("Failed to store path (%s) for %d because there is already an entry for %d", path, wof_id, v.(int64))
+			}
+
+			lookup.Store(path, wof_id)
+		}
+
 		atomic.AddInt32(&count, 1)
 		return nil
 	}

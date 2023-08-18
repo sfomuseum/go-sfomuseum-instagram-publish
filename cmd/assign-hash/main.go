@@ -19,8 +19,8 @@ import (
 	"github.com/sfomuseum/go-sfomuseum-instagram/hash"
 	sfom_writer "github.com/sfomuseum/go-sfomuseum-writer/v3"
 	"github.com/tidwall/gjson"
+	"github.com/whosonfirst/go-whosonfirst-export/v2"
 	"github.com/whosonfirst/go-whosonfirst-iterate/v2/iterator"
-	"github.com/whosonfirst/go-whosonfirst-export/v2"	
 	"github.com/whosonfirst/go-writer/v3"
 	"gocloud.dev/blob"
 )
@@ -98,20 +98,20 @@ func main() {
 		}
 
 		has_changed, new_body, err := export.AssignPropertiesIfChanged(ctx, body, updates)
-		
+
 		if err != nil {
 			return fmt.Errorf("Failed to assign perceptual hash to %s, %w", path, err)
 		}
 
 		if has_changed {
-			
+
 			_, err := sfom_writer.WriteBytes(ctx, wr, new_body)
-			
+
 			if err != nil {
 				return fmt.Errorf("Failed to write %s, %w", path, err)
 			}
 		}
-		
+
 		return nil
 	}
 
