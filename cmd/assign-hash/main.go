@@ -14,7 +14,8 @@ import (
 	"log"
 	"path/filepath"
 
-	_ "github.com/aaronland/gocloud-blob-s3"
+	_ "github.com/aaronland/gocloud-blob/s3"
+
 	"github.com/sfomuseum/go-sfomuseum-instagram-publish/secret"
 	"github.com/sfomuseum/go-sfomuseum-instagram/hash"
 	sfom_writer "github.com/sfomuseum/go-sfomuseum-writer/v3"

@@ -1,13 +1,31 @@
 # go-sfomuseum-instagram-publish
 
+Tools for working with Instagram exports in a SFO Museum context.
+
+## Documentation
+
+Documentation is incomplete at this time.
+
 ## Tools
 
 ### publish
 
-This is not ideal so we might need to revisit this code to search a folder recursively for `media.json` files.
+```
+$> ./bin/publish \
+	-media-bucket-uri file:///usr/local/data/instagram/instagram-sfomuseum-2024-11-27-p55zxMWB \
+	file:///usr/local/data/instagram/instagram-sfomuseum-2024-11-27-p55zxMWB/media.json
+```
+
+Note: The `media.json` file in the example above is _NOT_ included with Instagram exports by default. You will need to create it manually using the `derive-media-json` tool in the [sfomuseum/go-sfomuseum-instagram](https://github.com/sfomuseum/go-sfomuseum-instagram) package. For example:
 
 ```
-$> go run -mod vendor cmd/publish/main.go -reader-uri fs:///usr/local/data/sfomuseum-data-socialmedia-instagram/data -writer-uri fs:///usr/local/data/sfomuseum-data-socialmedia-instagram/data file:///Users/asc/Desktop/instagram/sfomuseum_20201008_part_2/media.json file:///Users/asc/Desktop/instagram/sfomuseum_20201008_part_3/media.json file:///Users/asc/Desktop/instagram/sfomuseum_20201008_part_4/media.json file:///Users/asc/Desktop/instagram/sfomuseum_20201008_part_5/media.json
+$> cd /usr/local/go-sfomuseum-instagram
+$> make cli
+
+$> ./bin/derive-media-json \
+	/usr/local/data/instagram/instagram-sfomuseum-2024-11-27-p55zxMWB/your_instagram_activity/content/posts_1.html \
+	> /usr/local/data/instagram/instagram-sfomuseum-2024-11-27-p55zxMWB/media.json
+
 ```
 
 ## See also

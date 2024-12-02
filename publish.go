@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	_ "log"
+	"log/slog"
 	"path/filepath"
 	"sync"
 	"time"
@@ -38,6 +38,9 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 	path_rsp := gjson.GetBytes(body, "path")
 	path := path_rsp.String()
 
+	logger := slog.Default()
+	logger = logger.With("path", path)
+
 	is_video := false
 
 	// This should be a little more sophisticated
@@ -64,12 +67,14 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 	body, err = media.AppendHashes(ctx, append_opts, body)
 
 	if err != nil {
+		logger.Error("Failed to append hashes", "error", err)
 		return fmt.Errorf("Failed to append hashes, %w", err)
 	}
 
 	body, err = media.ExpandCaption(ctx, body)
 
 	if err != nil {
+		logger.Error("Failed to expand caption", "error", err)
 		return fmt.Errorf("Failed to expand caption, %w", err)
 	}
 
@@ -96,12 +101,14 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 	media_id, err := DeriveMediaId(body, "")
 
 	if err != nil {
+		logger.Error("Failed to derive media ID", "error", err)
 		return fmt.Errorf("Failed to derive media ID, %w", err)
 	}
 
 	body, err = sjson.SetBytes(body, "media_id", media_id)
 
 	if err != nil {
+		logger.Error("Failed to assign media ID", "error", err)
 		return fmt.Errorf("Failed to assign media_id to post, %w", err)
 	}
 
@@ -141,6 +148,7 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 		body, err = sjson.SetBytes(body, "media_id", id_rsp.String())
 
 		if err != nil {
+			logger.Error("Failed to assign media ID", "error", err)
 			return fmt.Errorf("Failed to assign media_id to post, %w", err)
 		}
 
@@ -149,6 +157,7 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 		new_record, err := newWOFRecord(ctx)
 
 		if err != nil {
+			logger.Error("Failed to create new record", "error", err)
 			return err
 		}
 
@@ -158,6 +167,7 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 	taken_rsp := gjson.GetBytes(body, "taken")
 
 	if !taken_rsp.Exists() {
+		logger.Error("Missing taken property", "error", err)
 		return fmt.Errorf("Missing created timestamp")
 	}
 
@@ -166,6 +176,7 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 	taken_t := time.Unix(taken, 0)
 
 	if err != nil {
+		logger.Error("Failed to parse taken timestamp", "timestamp", taken, "error", err)
 		return err
 	}
 
@@ -180,18 +191,21 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 	wof_record, err = sjson.SetBytes(wof_record, "properties.edtf:inception", taken_str)
 
 	if err != nil {
+		logger.Error("Failed to assign inception", "error", err)
 		return err
 	}
 
 	wof_record, err = sjson.SetBytes(wof_record, "properties.edtf:cessation", taken_str)
 
 	if err != nil {
+		logger.Error("Failed to assign cessation", "error", err)
 		return err
 	}
 
 	excerpt_rsp := gjson.GetBytes(body, "caption.excerpt")
 
 	if !excerpt_rsp.Exists() {
+		logger.Error("Failed to assign caption", "error", err)
 		return fmt.Errorf("Missing caption.excerpt")
 	}
 
@@ -199,6 +213,7 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 	wof_record, err = sjson.SetBytes(wof_record, "properties.wof:name", wof_name)
 
 	if err != nil {
+		logger.Error("Failed to assign name", "error", err)
 		return err
 	}
 
@@ -207,18 +222,21 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 	err = json.Unmarshal(body, &post)
 
 	if err != nil {
+		logger.Error("Failed to unmarshal post", "error", err)
 		return fmt.Errorf("Failed to unmarshal record, %w", err)
 	}
 
 	wof_record, err = sjson.SetBytes(wof_record, "properties.instagram:post", post)
 
 	if err != nil {
+		logger.Error("Failed to assign post properties", "error", err)
 		return fmt.Errorf("Failed to append post, %w", err)
 	}
 
 	_, err = sfom_writer.WriteBytes(ctx, opts.Writer, wof_record)
 
 	if err != nil {
+		logger.Error("Failed to write new record", "error", err)
 		return fmt.Errorf("Failed to write record, %w", err)
 	}
 

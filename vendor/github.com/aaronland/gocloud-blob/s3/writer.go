@@ -1,10 +1,9 @@
-package s3blob
+package s3
 
 import (
 	"context"
 	"fmt"
 
-	"github.com/aaronland/gocloud-blob/s3"
 	aws_s3 "github.com/aws/aws-sdk-go-v2/service/s3"
 	"gocloud.dev/blob"
 )
@@ -14,7 +13,7 @@ import (
 // defined in 'acl'.
 func NewWriterWithACL(ctx context.Context, bucket *blob.Bucket, path string, str_acl string) (*blob.Writer, error) {
 
-	acl, err := s3.StringACLToObjectCannedACL(str_acl)
+	acl, err := StringACLToObjectCannedACL(str_acl)
 
 	if err != nil {
 		return nil, fmt.Errorf("Failed to derive canned ACL from string, %w", err)
