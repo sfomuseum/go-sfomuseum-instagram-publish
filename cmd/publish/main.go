@@ -9,16 +9,14 @@
 package main
 
 import (
-	_ "github.com/aaronland/gocloud-blob-s3"
-	_ "gocloud.dev/blob/fileblob"
-	_ "image/jpeg"
-)
-
-import (
 	"context"
 	"flag"
 	"log"
 
+	_ "github.com/aaronland/gocloud-blob/s3"
+	_ "gocloud.dev/blob/fileblob"
+	_ "image/jpeg"
+	
 	"github.com/sfomuseum/go-sfomuseum-instagram-publish"
 	"github.com/sfomuseum/go-sfomuseum-instagram/media"
 	"github.com/sfomuseum/go-sfomuseum-instagram/walk"
