@@ -12,11 +12,12 @@ import (
 	"context"
 	"flag"
 	"log"
+	"log/slog"
 
 	_ "github.com/aaronland/gocloud-blob/s3"
 	_ "gocloud.dev/blob/fileblob"
 	_ "image/jpeg"
-	
+
 	"github.com/sfomuseum/go-sfomuseum-instagram-publish"
 	"github.com/sfomuseum/go-sfomuseum-instagram/media"
 	"github.com/sfomuseum/go-sfomuseum-instagram/walk"
@@ -35,7 +36,14 @@ func main() {
 
 	media_bucket_uri := flag.String("media-bucket-uri", "", "A valid gocloud.dev/blob URI where Instagram (export) media files are stored.")
 
+	verbose := flag.Bool("verbose", false, "Enable verbose (debug) logging.")
+
 	flag.Parse()
+
+	if *verbose {
+		slog.SetLogLoggerLevel(slog.LevelDebug)
+		slog.Debug("Verbose logging enabled")
+	}
 
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
@@ -88,7 +96,14 @@ func main() {
 			throttle <- true
 		}()
 
-		return publish.PublishMedia(ctx, publish_opts, body)
+		err := publish.PublishMedia(ctx, publish_opts, body)
+
+		if err != nil {
+			// slog.Warn("Failed to publish media", "error", err)
+			return err
+		}
+
+		return nil
 	}
 
 	walk_opts := &walk.WalkWithCallbackOptions{

@@ -2,8 +2,6 @@ package publish
 
 import (
 	"fmt"
-	_ "log"
-	"time"
 
 	"github.com/sfomuseum/go-sfomuseum-instagram/media"
 	"github.com/tidwall/gjson"
@@ -35,7 +33,7 @@ func DeriveMediaId(body []byte, prefix string) (string, error) {
 	// again. If they do we will update the layout passed to time.Parse but
 	// continue to use that (now old) layout to format strings. Good times...
 
-	t, err := time.Parse(media.TIME_FORMAT, taken_rsp.String())
+	t, err := media.ParseTime(taken_rsp.String())
 
 	if err != nil {
 		return "", fmt.Errorf("Failed to parse %s, %w", taken_rsp.String(), err)
