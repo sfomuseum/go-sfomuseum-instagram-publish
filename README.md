@@ -2,6 +2,10 @@
 
 Tools for working with Instagram exports in a SFO Museum context.
 
+## Deprecation Notice
+
+This package has been deprecated. Please use [sfomuseum/go-sfomuseum/instagram/publish](https://github.com/sfomuseum/go-sfomuseum) instead.
+
 ## Documentation
 
 Documentation is incomplete at this time.
